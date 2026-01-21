@@ -1,0 +1,54 @@
+name: Deploy ASP.NET Core App to EC2 (DEV)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Checkout source code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Setup .NET 9 SDK
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      # 3️⃣ Restore dependencies
+      - name: Restore dependencies
+        run: dotnet restore
+
+      # 4️⃣ Build & publish app
+      - name: Publish application
+        run: dotnet publish -c Release -o publish
+
+      # 5️⃣ Setup SSH agent
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      # 6️⃣ Trust EC2 host
+      - name: Add EC2 to known_hosts
+        shell: bash
+        run: |
+          mkdir -p "$HOME/.ssh"
+          ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> "$HOME/.ssh/known_hosts"
+
+      # 7️⃣ Deploy to EC2
+      - name: Deploy to EC2
+        shell: bash
+        run: |
+          rsync -avz --delete publish/ \
+            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/app/
+
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            sudo systemctl daemon-reload
+            sudo systemctl restart app.service
+          EOF
