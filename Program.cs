@@ -65,6 +65,8 @@ builder.Services.AddScoped<IMarriageService, MarriageService>();
 builder.Services.AddScoped<IDivorceRepository, DivorceRepository>();
 builder.Services.AddScoped<IDivorceService, DivorceService>();
 
+builder.WebHost.UseUrls("http://0.0.0.0:5000");
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
