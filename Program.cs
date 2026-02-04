@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,9 +23,11 @@ builder.Services.AddCors(options =>
     options.AddPolicy("Frontend", policy =>
         policy.WithOrigins(
                 "http://localhost:8000",
+                "http://localhost:8001",
                 "http://127.0.0.1:8000",
-                "http://localhost:3000",
+                "http://localhost:5000",
                 "http://127.0.0.1:3000",
+                "https://localhost:7256",
                 "https://marry-me.online",
                 "https://www.marry-me.online"
             )
@@ -62,7 +65,6 @@ builder.Services.AddScoped<IMarriageService, MarriageService>();
 builder.Services.AddScoped<IDivorceRepository, DivorceRepository>();
 builder.Services.AddScoped<IDivorceService, DivorceService>();
 
-builder.WebHost.UseUrls("http://0.0.0.0:5000");
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -71,8 +73,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor |
+        ForwardedHeaders.XForwardedProto
+});
+
 app.UseCors("Frontend");
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();

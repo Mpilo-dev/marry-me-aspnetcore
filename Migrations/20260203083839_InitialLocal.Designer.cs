@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Marry_Me.Migrations
 {
     [DbContext(typeof(MarriageSystemDbContext))]
-    [Migration("20251022101646_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20260203083839_InitialLocal")]
+    partial class InitialLocal
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
