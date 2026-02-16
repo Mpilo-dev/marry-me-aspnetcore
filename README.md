@@ -15,6 +15,11 @@ This is the back-end API for the **Marry-Me** application. It handles user authe
 - JWT for authentication
 - FluentValidation for validation
 
+## 🛠 DevOps
+
+- CI/CD (Github Actions)
+- AWS(EC2)
+
 ## 📦 Getting Started
 
 ### 1. Clone the Repository
