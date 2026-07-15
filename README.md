@@ -25,8 +25,8 @@ This is the back-end API for the **Marry-Me** application. It handles user authe
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Mpilo-dev/marry-me-api.git
-cd marry-me-api
+git clone https://github.com/Mpilo-dev/marry-me-aspnetcore.git
+cd marry-me-aspnetcore
 ```
 
 ### 2. Install Dependencies
